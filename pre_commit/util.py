@@ -12,6 +12,7 @@ import tarfile
 import tempfile
 
 import pkg_resources
+import ruamel.yaml
 
 from pre_commit import five
 
@@ -210,3 +211,11 @@ def rmtree(path):
         else:
             raise
     shutil.rmtree(path, ignore_errors=False, onerror=handle_remove_readonly)
+
+
+yaml_load = functools.partial(
+    ruamel.yaml.load, Loader=ruamel.yaml.RoundTripLoader,
+)
+yaml_dump = functools.partial(
+    ruamel.yaml.dump, Dumper=ruamel.yaml.RoundTripDumper, encoding=None,
+)
