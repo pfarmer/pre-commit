@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import contextlib
+import distutils.spawn
 import errno
 import functools
 import os
@@ -166,11 +167,15 @@ def cmd_output(*cmd, **kwargs):
     }
 
     # py2/py3 on windows are more strict about the types here
-    cmd = [five.n(arg) for arg in cmd]
+    cmd = tuple(five.n(arg) for arg in cmd)
     kwargs['env'] = dict(
         (five.n(key), five.n(value))
         for key, value in kwargs.pop('env', {}).items()
     ) or None
+
+    # Fix for http://bugs.python.org/issue8557 on windows
+    if os.sep not in cmd[0]:
+        cmd = (distutils.spawn.find_executable(cmd[0]),) + cmd[1:]
 
     popen_kwargs.update(kwargs)
     proc = __popen(cmd, **popen_kwargs)
