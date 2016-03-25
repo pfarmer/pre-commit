@@ -132,4 +132,4 @@ def test_raises_on_error(popen_mock, makedirs_mock):
         instance = PrefixedCommandRunner(
             '.', popen=popen_mock, makedirs=makedirs_mock,
         )
-        instance.run(['foo'])
+        instance.run(['echo'])
